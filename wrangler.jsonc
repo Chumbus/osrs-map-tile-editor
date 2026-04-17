@@ -1,0 +1,12 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "osrs-tile-editor",
+	"compatibility_date": "2026-04-17",
+	"pages_build_output_dir": "./dist",
+	"kv_namespaces": [
+		{
+			"binding": "SHORT_URLS",
+			"id": "0b97e672293b476f9b0dd9dac91e7cf7"
+		}
+	]
+}

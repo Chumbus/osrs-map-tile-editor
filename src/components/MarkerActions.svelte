@@ -4,15 +4,33 @@
 
 	let shareStatus = $state("");
 
-	function handleShare() {
-		const url = window.location.href;
-		navigator.clipboard.writeText(url).then(
-			() => {
-				shareStatus = "Copied!";
-				setTimeout(() => (shareStatus = ""), 1500);
-			},
-			() => prompt("Copy this URL:", url),
-		);
+	async function handleShare() {
+		const fullUrl = window.location.href;
+		let toCopy = fullUrl;
+
+		shareStatus = "Shortening…";
+		try {
+			const res = await fetch("/api/shorten", {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ url: fullUrl }),
+			});
+			if (res.ok) {
+				const data = await res.json();
+				if (data?.shortUrl) toCopy = data.shortUrl;
+			}
+		} catch {
+			// Network / endpoint unreachable — fall through to copying the full URL.
+		}
+
+		try {
+			await navigator.clipboard.writeText(toCopy);
+			shareStatus = "Copied!";
+			setTimeout(() => (shareStatus = ""), 1500);
+		} catch {
+			shareStatus = "";
+			prompt("Copy this URL:", toCopy);
+		}
 	}
 
 	function handleImport() {

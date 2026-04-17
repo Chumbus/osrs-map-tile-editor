@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.12",
+    "@cloudflare/workers-types": "^4.20260417.1",
     "@secretlint/secretlint-rule-preset-recommend": "^11.7.1",
     "@types/bun": "latest",
     "@types/leaflet": "^1.9.21",
