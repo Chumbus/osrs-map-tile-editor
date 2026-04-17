@@ -1,0 +1,27 @@
+# deps & build
+node_modules/
+dist/
+
+# large downloaded tile data (regenerated via scripts/download-tiles.sh)
+/tiles/
+/public/tiles/
+
+# legacy upstream paths
+/layers_rs3/
+/layers_osrs/
+
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+bun-debug.log*
+
+# editor / OS cruft
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp

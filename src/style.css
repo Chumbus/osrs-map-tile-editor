@@ -1,0 +1,215 @@
+/* Leaflet core */
+@import "leaflet/dist/leaflet.css";
+
+/* Leaflet plugin styles */
+@import "../css/main.css";
+@import "../css/plugins/leaflet.fullscreen.css";
+@import "../css/plugins/leaflet.MousePosition.css";
+@import "../css/plugins/leaflet.icons.css";
+@import "../css/plugins/leaflet.mapSelector.css";
+@import "../css/plugins/leaflet.mapTemplate.css";
+@import "../css/plugins/leaflet.customZoom.css";
+@import "../css/plugins/leaflet.displays.css";
+@import "../css/plugins/leaflet.mapicons.css";
+@import "../css/plugins/leaflet.overworldlabels.css";
+
+/* ── Global reset ──────────────────────────────────────── */
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+	background: var(--bg-base);
+}
+
+/* ── Hide Leaflet built-in controls (sidebar handles these) ── */
+
+.leaflet-control-zoom,
+.leaflet-control-fullscreen,
+.leaflet-control-plane,
+.leaflet-control-layers {
+	display: none !important;
+}
+
+/* ── Coordinate readout ── */
+
+.leaflet-control-mouseposition {
+	background: var(--bg-panel) !important;
+	color: var(--text-secondary) !important;
+	border: 1px solid var(--border) !important;
+	border-radius: 6px !important;
+	padding: 6px 10px !important;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+	font-size: 12px !important;
+	backdrop-filter: blur(6px);
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	pointer-events: auto;
+	cursor: pointer;
+	min-height: 20px;
+}
+
+.leaflet-control-mouseposition:empty {
+	display: none !important;
+}
+
+.coord-global {
+	color: var(--accent);
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+.coord-plane {
+	color: var(--text-muted);
+	font-size: 10px;
+	font-weight: 600;
+}
+
+.coord-region {
+	color: var(--text-dim);
+	font-size: 10px;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ── Message box styling ── */
+
+.leaflet-control-message-box {
+	background: var(--bg-panel) !important;
+	color: var(--text-primary) !important;
+	border: 1px solid var(--border) !important;
+	border-radius: 6px !important;
+	font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+	backdrop-filter: blur(4px);
+}
+
+.leaflet-control-message-clear {
+	color: var(--text-muted) !important;
+}
+
+/* ── Map tile rendering ── */
+
+.leaflet-tile-loaded {
+	visibility: inherit;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+}
+
+/* ── Edit popup ── */
+
+.tilemarker-edit-popup .leaflet-popup-content-wrapper {
+	background: var(--bg-panel) !important;
+	border: 1px solid var(--border) !important;
+	border-radius: 6px !important;
+	color: var(--text-primary) !important;
+	backdrop-filter: blur(4px);
+}
+
+.tilemarker-edit-popup .leaflet-popup-tip {
+	background: var(--bg-panel) !important;
+	border: 1px solid var(--border) !important;
+}
+
+.tilemarker-edit-popup .leaflet-popup-content {
+	margin: 10px 12px;
+}
+
+.tilemarker-edit {
+	font: 12px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.te-label {
+	display: block;
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-muted);
+	font-weight: 600;
+	margin-bottom: 3px;
+}
+
+.te-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+
+.te-color {
+	width: 30px;
+	height: 26px;
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	padding: 1px;
+	background: var(--bg-input);
+	cursor: pointer;
+}
+
+.te-opacity {
+	flex: 1;
+	accent-color: var(--accent);
+}
+
+.te-opacity-val {
+	font-size: 11px;
+	color: var(--text-muted);
+	min-width: 28px;
+}
+
+.te-text {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 4px 8px;
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	background: var(--bg-input);
+	color: var(--text-primary);
+	font: 12px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	margin-bottom: 8px;
+}
+
+.te-text::placeholder {
+	color: var(--border);
+}
+
+.te-actions {
+	margin-bottom: 0;
+}
+
+.te-btn {
+	flex: 1;
+	padding: 5px 10px;
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	background: var(--bg-input);
+	color: var(--text-secondary);
+	font-size: 11px;
+	cursor: pointer;
+	transition: all 0.1s;
+}
+
+.te-btn:hover {
+	background: var(--bg-hover);
+}
+
+.te-save:hover {
+	background: var(--accent);
+	color: var(--bg-panel);
+	border-color: var(--accent);
+}
+
+.te-delete {
+	color: var(--danger-text);
+	border-color: var(--danger-border);
+}
+
+.te-delete:hover {
+	background: var(--danger);
+	color: white;
+	border-color: var(--danger);
+}

@@ -1,0 +1,13 @@
+.mapicon-tooltip {
+    font: 12px/1.4 "Helvetica Neue", Arial, Helvetica, sans-serif;
+    padding: 3px 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.mapicon-tooltip.leaflet-tooltip-top::before {
+    border-top-color: rgba(0, 0, 0, 0.8);
+}

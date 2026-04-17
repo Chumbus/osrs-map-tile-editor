@@ -1,0 +1,26 @@
+{
+  "name": "osrs-tile-editor",
+  "private": true,
+  "scripts": {
+    "dev": "bun --hot server.ts",
+    "build": "bun run build.ts",
+    "test": "bun test",
+    "lint": "bunx biome check src/",
+    "lint:fix": "bunx biome check --fix src/",
+    "format": "bunx biome format --write src/",
+    "download-tiles": "bash scripts/download-tiles.sh"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.12",
+    "@types/bun": "latest",
+    "@types/leaflet": "^1.9.21",
+    "bun-plugin-svelte": "^0.0.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "svelte": "^5.55.4"
+  }
+}

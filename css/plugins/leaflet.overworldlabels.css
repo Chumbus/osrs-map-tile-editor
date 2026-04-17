@@ -1,0 +1,23 @@
+.overworld-label-icon {
+    background: none !important;
+    border: none !important;
+}
+
+.overworld-label-container {
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: max-content;
+    pointer-events: none;
+}
+
+.overworld-label {
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    white-space: nowrap;
+    text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0 0 4px rgba(0,0,0,0.6);
+    transform-origin: center center;
+}
