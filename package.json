@@ -1,5 +1,5 @@
 {
-  "name": "osrs-tile-editor",
+  "name": "osrs-map-tile-editor",
   "private": true,
   "scripts": {
     "dev": "bun --hot server.ts",
