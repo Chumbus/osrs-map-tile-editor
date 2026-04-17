@@ -47,6 +47,10 @@ To work offline, download tiles locally with `bun run download-tiles`.
 | `bun run format` | Format with Biome |
 | `bun run download-tiles` | Download OSRS map tiles (optional, ~1.6 GB) |
 
+## Credits
+
+This project builds on work by [mejrs](https://github.com/mejrs). The initial map tiles (served from R2 as PNGs) and the dungeon-label coordinates (`public/data/dungeon_labels.json`, snapshotted once from a public sheet) originated from [mejrs/mejrs.github.io](https://github.com/mejrs/mejrs.github.io) and [mejrs/layers_osrs](https://github.com/mejrs/layers_osrs). The Svelte / TypeScript UI, build pipeline, and tooling here are a separate reimplementation.
+
 ## Licence
 
 Code: [MIT](./LICENSE). Third-party attribution: see [NOTICES](./NOTICES).

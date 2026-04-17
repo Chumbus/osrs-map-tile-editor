@@ -67,10 +67,7 @@ export function initMap(container: HTMLElement) {
 
 	// Optional layers
 	const grid = (L as any).grid({ bounds: [[0, 0], [12800, 6400]] });
-	const dungeonLabels = (L as any).maplabelGroup({
-		API_KEY: "AIzaSyBrYT0-aS9VpW2Aenm-pJ2UCUhih8cZ4g8",
-		SHEET_ID: "1859HuKw5dXqmfakFd6e6kQ_PEXQA02namB4aNVQ0qpY",
-	});
+	const dungeonLabels = (L as any).maplabelGroup();
 	const mapIcons = (L as any).mapIconLayer();
 	const overworldLabels = (L as any).overworldLabelLayer();
 

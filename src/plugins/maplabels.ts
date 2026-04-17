@@ -1,19 +1,20 @@
 import L from "leaflet";
 
 const MaplabelGroup = L.LayerGroup.extend({
+	options: {
+		dataUrl: "/data/dungeon_labels.json",
+	},
+
 	initialize: function (options) {
 		L.LayerGroup.prototype.initialize.call(this, {}, options);
 	},
 
 	onAdd: function (map) {
-		const url = `https://sheets.googleapis.com/v4/spreadsheets/${this.options.SHEET_ID}/values/A:Z?key=${this.options.API_KEY}`;
-		fetch(url)
+		fetch(this.options.dataUrl)
 			.then((res) => res.json())
-			.then((sheet) => {
-				const markers = this.parse_sheet(sheet);
-				const marker_iter = markers[Symbol.iterator]();
-				for (const marker of marker_iter) {
-					this.addLayer(marker);
+			.then((rows) => {
+				for (const row of rows) {
+					this.addLayer(this.create_textlabel(...row));
 				}
 			});
 		L.LayerGroup.prototype.eachLayer.call(this, map.addLayer, map);
@@ -31,10 +32,6 @@ const MaplabelGroup = L.LayerGroup.extend({
 
 	onRemove: function (map) {
 		L.LayerGroup.prototype.eachLayer.call(this, map.removeLayer, map);
-	},
-
-	parse_sheet: function (sheet) {
-		return sheet.values.map((row) => this.create_textlabel(...row));
 	},
 
 	create_textlabel: function (x, y, _plane, description) {
