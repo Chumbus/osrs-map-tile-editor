@@ -12,9 +12,12 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.12",
+    "@secretlint/secretlint-rule-preset-recommend": "^11.7.1",
     "@types/bun": "latest",
     "@types/leaflet": "^1.9.21",
     "bun-plugin-svelte": "^0.0.6",
+    "lefthook": "^2.1.6",
+    "secretlint": "^11.7.1",
     "wrangler": "^4.83.0"
   },
   "peerDependencies": {

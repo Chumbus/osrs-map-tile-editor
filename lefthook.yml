@@ -1,0 +1,8 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: secretlint
+      glob: "*"
+      exclude:
+        - "bun.lock"
+      run: bunx secretlint --secretlintignore .gitignore {staged_files}
