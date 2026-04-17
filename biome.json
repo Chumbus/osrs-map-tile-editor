@@ -26,7 +26,18 @@
 				"useIterableCallbackReturn": "off"
 			},
 			"style": {
-				"noNonNullAssertion": "off"
+				"noNonNullAssertion": "off",
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"patterns": [
+							{
+								"group": ["./*", "../*"],
+								"message": "Relative imports are banned; use the @/ alias."
+							}
+						]
+					}
+				}
 			},
 			"correctness": {
 				"noInnerDeclarations": "off",

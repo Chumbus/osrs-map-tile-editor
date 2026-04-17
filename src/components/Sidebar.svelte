@@ -48,7 +48,7 @@
 	</div>
 
 	<footer class="sidebar-footer">
-		Made with ❤ by <a href="https://github.com/Chumbus" target="_blank" rel="noopener">Ben Knowles</a>
+		Made with ❤ by <a href="https://github.com/Chumbus/osrs-tile-editor" target="_blank" rel="noopener">Ben Knowles</a>
 	</footer>
 </aside>
 

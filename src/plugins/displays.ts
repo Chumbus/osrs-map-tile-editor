@@ -400,19 +400,3 @@ L.Control.Display.OSRSVarbits = L.Control.Display.extend({
 });
 
 L.control.display.OSRSvarbits = (options) => new L.Control.Display.OSRSVarbits(options);
-
-//Just a link for now, may update it to work without redirect
-L.Control.Display.Pathfinder = L.Control.Display.extend({
-	options: {
-		position: "bottomleft",
-		title: "Visit Pathfinder",
-		icon: "images/favicon_skavid_map.png",
-	},
-	onAdd: function (map) {
-		const container = L.Control.Display.prototype.onAdd.call(this, map);
-		container.onclick = () => (window.location.href = "https://mejrs.github.io/Pathfinder");
-		return container;
-	},
-});
-
-L.control.display.pathfinder = (options) => new L.Control.Display.Pathfinder(options);

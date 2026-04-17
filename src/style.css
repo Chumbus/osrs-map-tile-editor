@@ -2,16 +2,16 @@
 @import "leaflet/dist/leaflet.css";
 
 /* Leaflet plugin styles */
-@import "../css/main.css";
-@import "../css/plugins/leaflet.fullscreen.css";
-@import "../css/plugins/leaflet.MousePosition.css";
-@import "../css/plugins/leaflet.icons.css";
-@import "../css/plugins/leaflet.mapSelector.css";
-@import "../css/plugins/leaflet.mapTemplate.css";
-@import "../css/plugins/leaflet.customZoom.css";
-@import "../css/plugins/leaflet.displays.css";
-@import "../css/plugins/leaflet.mapicons.css";
-@import "../css/plugins/leaflet.overworldlabels.css";
+@import "./styles/main.css";
+@import "./styles/leaflet.fullscreen.css";
+@import "./styles/leaflet.MousePosition.css";
+@import "./styles/leaflet.icons.css";
+@import "./styles/leaflet.mapSelector.css";
+@import "./styles/leaflet.mapTemplate.css";
+@import "./styles/leaflet.customZoom.css";
+@import "./styles/leaflet.displays.css";
+@import "./styles/leaflet.mapicons.css";
+@import "./styles/leaflet.overworldlabels.css";
 
 /* ── Global reset ──────────────────────────────────────── */
 

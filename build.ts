@@ -1,4 +1,5 @@
 import { cpSync, rmSync } from "node:fs";
+import { SveltePlugin } from "bun-plugin-svelte";
 
 const dist = "./dist";
 
@@ -11,6 +12,7 @@ const result = await Bun.build({
   outdir: dist,
   minify: true,
   sourcemap: "linked",
+  plugins: [SveltePlugin({ development: false })],
 });
 
 if (!result.success) {
@@ -21,7 +23,8 @@ if (!result.success) {
   process.exit(1);
 }
 
-// Copy public/ assets to dist/
+// Copy public/ assets to dist/, excluding tiles (served from R2)
 cpSync("./public", dist, { recursive: true });
+rmSync(`${dist}/tiles`, { recursive: true, force: true });
 
 console.log(`Build complete: ${result.outputs.length} outputs → ${dist}/`);

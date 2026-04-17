@@ -57,7 +57,7 @@ export function initMap(container: HTMLElement) {
 
 	// Tile layer
 	(L as any).tileLayer
-		.main("tiles/{zoom}/{plane}_{x}_{y}.png", {
+		.main("https://pub-2e3f94de41b64e66a90f86810d405566.r2.dev/{zoom}/{plane}_{x}_{y}.png", {
 			minZoom: -4,
 			maxNativeZoom: 4,
 			maxZoom: 8,

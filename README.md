@@ -1,21 +1,54 @@
-# RuneScape Cartography through the ages
+# OSRS Tile Editor
 
-This was developed as part of the [RuneScape Wiki](https://runescape.wiki/ "The RuneScape Wiki") maps project.
+A web-based tile marker editor for Old School RuneScape. Draw coloured tile overlays on the OSRS world map, share them via URL, and export/import marker sets.
 
-## Contributing
+**Live:** https://osrs-tile-editor.pages.dev
 
-You cna contribute by searching for old game caches
+## Features
 
-## Cloning
+- Pan and zoom the full OSRS world map across all planes
+- Point, freehand, rectangle, line, and eraser tools for placing/removing markers
+- Per-marker colour, opacity, and optional label
+- Shareable URLs that encode the current marker set
+- Built-in undo/redo
+- Toggle overlay layers: map icons, area labels, dungeon labels, grid
 
-You can clone the repository and use it locally. Most of the data used is located in git submodules. As such you need to initialize those as well. You can do that with:
-```text
-git clone --recurse-submodules https://github.com/mejrs/mejrs.github.io.git
+## Tech stack
+
+- [Bun](https://bun.sh) — runtime, build, dev server
+- [Svelte 5](https://svelte.dev) — UI
+- [Leaflet](https://leafletjs.com) — map rendering
+- [Biome](https://biomejs.dev) — lint + format
+- [Cloudflare Pages](https://pages.cloudflare.com) — static hosting
+- [Cloudflare R2](https://developers.cloudflare.com/r2/) — tile storage
+
+## Running locally
+
+Requires [Bun](https://bun.sh).
+
+```sh
+bun install
+bun run dev
 ```
 
-Note that you can not simply open this in your browser - you need to set up a local HTTP server to run it.
+Open http://localhost:3000. Tiles are fetched from the production R2 bucket by default, so no local tile download is required for basic usage.
 
-## Maptile rendering
+To work offline, download tiles locally with `bun run download-tiles`.
 
-The data in this repository can be generated using [https://github.com/mejrs/rs3cache/](https://github.com/mejrs/rs3cache/ "Tools and api for reading and interpreting the RuneScape 3 game cache.").
-For more information on how the maptiles are built, see [this document](https://docs.google.com/document/d/1xv7iVBkG6eWDrXFhIYi77AVodJc0D-4Aqn0ncZXKJfw/edit# "RuneScape Wiki Maps Project - Google Docs").
+## Commands
+
+| Command | Description |
+| --- | --- |
+| `bun run dev` | Start dev server with HMR |
+| `bun run build` | Production build into `dist/` |
+| `bun test` | Run tests |
+| `bun run lint` | Lint with Biome |
+| `bun run lint:fix` | Lint + auto-fix |
+| `bun run format` | Format with Biome |
+| `bun run download-tiles` | Download OSRS map tiles (optional, ~1.6 GB) |
+
+## Licence
+
+Code: [MIT](./LICENSE). Third-party attribution: see [NOTICES](./NOTICES).
+
+Map tiles and game sprites are Jagex intellectual property; they are used here under fair-use conventions common to RuneScape fan projects.
