@@ -2,6 +2,19 @@
 	import { markerStore } from "@/stores/markers.svelte";
 	import { toGlobalCoords } from "@/helpers";
 
+	let shareStatus = $state("");
+
+	function handleShare() {
+		const url = window.location.href;
+		navigator.clipboard.writeText(url).then(
+			() => {
+				shareStatus = "Copied!";
+				setTimeout(() => (shareStatus = ""), 1500);
+			},
+			() => prompt("Copy this URL:", url),
+		);
+	}
+
 	function handleImport() {
 		const input = prompt("Paste RuneLite Ground Markers JSON:");
 		if (!input) return;
@@ -73,6 +86,11 @@
 </script>
 
 <div class="marker-actions">
+	<button class="action-btn" onclick={handleShare}>
+		<span class="btn-icon">⎘</span>
+		{shareStatus || "Share URL"}
+	</button>
+
 	<label class="section-label">RuneLite</label>
 	<div class="button-row">
 		<button class="action-btn" onclick={handleImport}>
