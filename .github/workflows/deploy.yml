@@ -12,6 +12,10 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      # cloudflare/wrangler-action still declares Node.js 20 (deprecated).
+      # Force it to Node 24 until they publish a v4.
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     permissions:
       contents: read
       deployments: write
