@@ -206,6 +206,8 @@ class MarkerStore {
 
 	syncToUrl() {
 		const url = new URL(window.location.href);
+		// Any edit invalidates an existing short id — always clear it.
+		url.searchParams.delete("s");
 		if (this.markers.length === 0) {
 			url.searchParams.delete("markers");
 			history.replaceState(null, "", url);
@@ -220,9 +222,23 @@ class MarkerStore {
 
 	loadFromUrl() {
 		const url = new URL(window.location.href);
+		const shortId = url.searchParams.get("s");
+		if (shortId) {
+			fetch(`/api/expand/${encodeURIComponent(shortId)}`)
+				.then((r) => (r.ok ? r.json() : null))
+				.then((data) => {
+					if (data?.markers) this._loadEncoded(data.markers);
+				})
+				.catch((e) => console.error("Failed to expand short URL:", e));
+			return;
+		}
+
 		const encoded = url.searchParams.get("markers");
 		if (!encoded) return;
+		this._loadEncoded(encoded);
+	}
 
+	_loadEncoded(encoded: string) {
 		decompressFromUrl(encoded)
 			.then((bytes) => {
 				const data = unpackMarkers(bytes);

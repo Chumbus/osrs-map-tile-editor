@@ -5,22 +5,32 @@
 	let shareStatus = $state("");
 
 	async function handleShare() {
-		const fullUrl = window.location.href;
-		let toCopy = fullUrl;
+		const current = new URL(window.location.href);
+		let toCopy = current.href;
 
-		shareStatus = "Shortening…";
-		try {
-			const res = await fetch("/api/shorten", {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ url: fullUrl }),
-			});
-			if (res.ok) {
-				const data = await res.json();
-				if (data?.shortUrl) toCopy = data.shortUrl;
+		// Skip the API call if we've already shortened the current marker set
+		// (indicated by the presence of an `?s=<id>` param; any marker edit
+		// clears it via markerStore.syncToUrl).
+		if (!current.searchParams.has("s")) {
+			shareStatus = "Shortening…";
+			try {
+				const res = await fetch("/api/shorten", {
+					method: "POST",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify({ url: current.href }),
+				});
+				if (res.ok) {
+					const data = await res.json();
+					if (data?.id) {
+						current.searchParams.delete("markers");
+						current.searchParams.set("s", data.id);
+						history.replaceState(null, "", current);
+						toCopy = current.href;
+					}
+				}
+			} catch {
+				// Network / endpoint unreachable — fall through to copying the full URL.
 			}
-		} catch {
-			// Network / endpoint unreachable — fall through to copying the full URL.
 		}
 
 		try {
