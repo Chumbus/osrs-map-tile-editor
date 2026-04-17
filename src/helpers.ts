@@ -86,6 +86,50 @@ export function rectTiles(x0, y0, x1, y1) {
 	return tiles;
 }
 
+// Just the border of a rectangle (inclusive)
+export function rectOutlineTiles(x0, y0, x1, y1) {
+	const tiles = [];
+	const minX = Math.min(x0, x1),
+		maxX = Math.max(x0, x1);
+	const minY = Math.min(y0, y1),
+		maxY = Math.max(y0, y1);
+	for (let x = minX; x <= maxX; x++) {
+		tiles.push([x, minY]);
+		if (minY !== maxY) tiles.push([x, maxY]);
+	}
+	for (let y = minY + 1; y < maxY; y++) {
+		tiles.push([minX, y]);
+		if (minX !== maxX) tiles.push([maxX, y]);
+	}
+	return tiles;
+}
+
+// 4-connected flood fill starting at (startX, startY).
+// `match` decides whether a tile belongs to the region to fill.
+// Returns { tiles, hitLimit } — if hitLimit is true the search was aborted.
+export function floodFill(
+	startX: number,
+	startY: number,
+	match: (x: number, y: number) => boolean,
+	maxTiles = 10000,
+) {
+	const tiles: [number, number][] = [];
+	const visited = new Set<string>();
+	const stack: [number, number][] = [[startX, startY]];
+
+	while (stack.length > 0) {
+		if (tiles.length >= maxTiles) return { tiles, hitLimit: true };
+		const [x, y] = stack.pop()!;
+		const key = `${x}:${y}`;
+		if (visited.has(key)) continue;
+		visited.add(key);
+		if (!match(x, y)) continue;
+		tiles.push([x, y]);
+		stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+	}
+	return { tiles, hitLimit: false };
+}
+
 // Marker key for fast duplicate lookups
 export function markerKey(plane, globalX, globalY) {
 	return `${plane}:${globalX}:${globalY}`;

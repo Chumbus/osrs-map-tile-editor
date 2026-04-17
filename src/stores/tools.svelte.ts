@@ -4,7 +4,8 @@ export const TOOLS = [
 	{ id: "freehand", label: "Draw", cursor: "crosshair", key: "3" },
 	{ id: "line", label: "Line", cursor: "crosshair", key: "4" },
 	{ id: "rect", label: "Rect", cursor: "crosshair", key: "5" },
-	{ id: "eraser", label: "Eraser", cursor: "not-allowed", key: "6" },
+	{ id: "fill", label: "Fill", cursor: "crosshair", key: "6" },
+	{ id: "eraser", label: "Eraser", cursor: "not-allowed", key: "7" },
 ] as const;
 
 export type ToolId = (typeof TOOLS)[number]["id"];
@@ -13,6 +14,7 @@ class ToolStore {
 	activeTool: ToolId = $state("hand");
 	color: string = $state("#FFFF00");
 	opacity: number = $state(100);
+	eraserSize: number = $state(1);
 
 	get cssColor() {
 		return this.color;
@@ -76,8 +78,9 @@ class ToolStore {
 			point: "Click to place, click existing to edit. [2]",
 			freehand: "Click and drag to paint tiles. [3]",
 			line: "Click start, then click end. [4]",
-			rect: "Click and drag to fill a rectangle. [5]",
-			eraser: "Click or drag to remove markers. [6]",
+			rect: "Click and drag to draw a rectangle outline. [5]",
+			fill: "Click to flood-fill a connected region. [6]",
+			eraser: "Click or drag to remove markers. [7]",
 		};
 		return hints[this.activeTool];
 	}

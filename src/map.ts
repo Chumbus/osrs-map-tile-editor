@@ -21,7 +21,7 @@ import { toolStore } from "@/stores/tools.svelte";
 import { markerStore } from "@/stores/markers.svelte";
 import { mapStore } from "@/stores/map.svelte";
 import { layerStore } from "@/stores/layers.svelte";
-import { argbToCss, bresenhamLine, rectTiles, toGlobalCoords } from "@/helpers";
+import { argbToCss, bresenhamLine, floodFill, rectOutlineTiles, toGlobalCoords } from "@/helpers";
 
 // Rectangle cache: key → L.Rectangle
 const rectangles: Record<string, L.Rectangle> = {};
@@ -170,16 +170,25 @@ export function initMap(container: HTMLElement) {
 			drawing = true;
 			map.dragging.disable();
 			markerStore.beginAction();
-			markerStore.remove(map.getPlane(), tile.x, tile.y);
+			eraseAt(map.getPlane(), tile.x, tile.y);
 		}
 	});
+
+	function eraseAt(plane: number, cx: number, cy: number) {
+		const r = toolStore.eraserSize - 1;
+		for (let dx = -r; dx <= r; dx++) {
+			for (let dy = -r; dy <= r; dy++) {
+				markerStore.remove(plane, cx + dx, cy + dy);
+			}
+		}
+	}
 
 	map.on("mousemove", (e: any) => {
 		const tile = tileAt(e);
 		if (toolStore.activeTool === "freehand" && drawing) {
 			markerStore.place(map.getPlane(), tile.x, tile.y, toolStore.argbColor);
 		} else if (toolStore.activeTool === "eraser" && drawing) {
-			markerStore.remove(map.getPlane(), tile.x, tile.y);
+			eraseAt(map.getPlane(), tile.x, tile.y);
 		} else if (toolStore.activeTool === "rect" && drawing && rectStart) {
 			removePreview();
 			const minX = Math.min(rectStart.x, tile.x);
@@ -204,7 +213,7 @@ export function initMap(container: HTMLElement) {
 		if (toolStore.activeTool === "rect" && drawing && rectStart) {
 			markerStore.beginAction();
 			const plane = map.getPlane();
-			for (const [x, y] of rectTiles(rectStart.x, rectStart.y, tile.x, tile.y)) {
+			for (const [x, y] of rectOutlineTiles(rectStart.x, rectStart.y, tile.x, tile.y)) {
 				markerStore.place(plane, x, y, toolStore.argbColor);
 			}
 			markerStore.commitAction();
@@ -240,6 +249,26 @@ export function initMap(container: HTMLElement) {
 				lineStart = null;
 				removePreview();
 			}
+		} else if (toolStore.activeTool === "fill") {
+			const existing = markerStore.getAt(plane, tile.x, tile.y);
+			const targetColor = existing?.color;
+			const { tiles, hitLimit } = floodFill(
+				tile.x,
+				tile.y,
+				(x, y) => {
+					const m = markerStore.getAt(plane, x, y);
+					return targetColor ? m?.color === targetColor : m === undefined;
+				},
+			);
+			if (hitLimit) {
+				alert(`Fill aborted: region is too large (over 10,000 tiles).`);
+				return;
+			}
+			markerStore.beginAction();
+			for (const [x, y] of tiles) {
+				markerStore.place(plane, x, y, toolStore.argbColor);
+			}
+			markerStore.commitAction();
 		}
 	});
 
@@ -339,8 +368,8 @@ export function initMap(container: HTMLElement) {
 			markerStore.redo();
 		}
 		const idx = Number.parseInt(e.key) - 1;
-		if (idx >= 0 && idx < 6) {
-			const tools = ["hand", "point", "freehand", "line", "rect", "eraser"] as const;
+		if (idx >= 0 && idx < 7) {
+			const tools = ["hand", "point", "freehand", "line", "rect", "fill", "eraser"] as const;
 			toolStore.setTool(tools[idx]);
 		}
 	});

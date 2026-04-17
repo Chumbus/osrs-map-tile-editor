@@ -3,8 +3,10 @@ import {
 	argbToCss,
 	bresenhamLine,
 	cssToArgb,
+	floodFill,
 	markerKey,
 	packMarkers,
+	rectOutlineTiles,
 	rectTiles,
 	toGlobalCoords,
 	toRegionCoords,
@@ -194,5 +196,56 @@ describe("packMarkers / unpackMarkers", () => {
 		const packed = packMarkers([]);
 		const unpacked = unpackMarkers(packed);
 		expect(unpacked.length).toBe(0);
+	});
+});
+
+describe("rectOutlineTiles", () => {
+	test("3x3 box returns 8 border tiles (interior excluded)", () => {
+		const tiles = rectOutlineTiles(0, 0, 2, 2);
+		expect(tiles.length).toBe(8);
+		expect(tiles).toEqual(
+			expect.arrayContaining([
+				[0, 0], [1, 0], [2, 0],
+				[0, 2], [1, 2], [2, 2],
+				[0, 1], [2, 1],
+			]),
+		);
+	});
+
+	test("single tile returns that tile", () => {
+		expect(rectOutlineTiles(5, 5, 5, 5)).toEqual([[5, 5]]);
+	});
+
+	test("horizontal 1xN line returns every tile", () => {
+		const tiles = rectOutlineTiles(0, 0, 3, 0);
+		expect(tiles.length).toBe(4);
+	});
+
+	test("swapped corners are equivalent", () => {
+		const a = rectOutlineTiles(0, 0, 3, 3).sort();
+		const b = rectOutlineTiles(3, 3, 0, 0).sort();
+		expect(a).toEqual(b);
+	});
+});
+
+describe("floodFill", () => {
+	test("fills a connected region", () => {
+		const filled = new Set(["0:0", "1:0", "0:1", "1:1"]);
+		const { tiles, hitLimit } = floodFill(0, 0, (x, y) => filled.has(`${x}:${y}`));
+		expect(hitLimit).toBe(false);
+		expect(tiles.length).toBe(4);
+	});
+
+	test("does not cross boundaries", () => {
+		// Two diagonal-only-connected regions — flood fill is 4-connected, so we only get one
+		const filled = new Set(["0:0", "1:0", "2:1", "2:2"]);
+		const { tiles } = floodFill(0, 0, (x, y) => filled.has(`${x}:${y}`));
+		expect(tiles.length).toBe(2);
+	});
+
+	test("hits the tile cap on unbounded match", () => {
+		const { tiles, hitLimit } = floodFill(0, 0, () => true, 100);
+		expect(hitLimit).toBe(true);
+		expect(tiles.length).toBe(100);
 	});
 });
