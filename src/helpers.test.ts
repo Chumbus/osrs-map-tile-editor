@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
 	argbToCss,
 	bresenhamLine,
+	brushTiles,
 	cssToArgb,
 	floodFill,
 	markerKey,
@@ -225,6 +226,31 @@ describe("rectOutlineTiles", () => {
 		const a = rectOutlineTiles(0, 0, 3, 3).sort();
 		const b = rectOutlineTiles(3, 3, 0, 0).sort();
 		expect(a).toEqual(b);
+	});
+
+	test("thickness=2 on a 4x4 fills the outer and next ring (12 tiles)", () => {
+		// outer ring of 4x4 = 12 tiles, inner 2x2 = 4 tiles. Total 16 with thickness=2.
+		const tiles = rectOutlineTiles(0, 0, 3, 3, 2);
+		expect(tiles.length).toBe(16);
+	});
+
+	test("thickness >= half collapses to a filled rectangle (no holes)", () => {
+		const tiles = rectOutlineTiles(0, 0, 2, 2, 99);
+		expect(tiles.length).toBe(9); // entire 3x3
+	});
+});
+
+describe("brushTiles", () => {
+	test("size=1 returns just the center", () => {
+		expect(brushTiles(5, 5, 1)).toEqual([[5, 5]]);
+	});
+
+	test("size=2 returns 3x3", () => {
+		expect(brushTiles(0, 0, 2).length).toBe(9);
+	});
+
+	test("size=3 returns 5x5", () => {
+		expect(brushTiles(0, 0, 3).length).toBe(25);
 	});
 });
 

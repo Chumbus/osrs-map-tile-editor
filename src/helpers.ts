@@ -86,20 +86,48 @@ export function rectTiles(x0, y0, x1, y1) {
 	return tiles;
 }
 
-// Just the border of a rectangle (inclusive)
-export function rectOutlineTiles(x0, y0, x1, y1) {
-	const tiles = [];
+// Just the border of a rectangle (inclusive).
+// thickness=1 is a single-tile border; higher values add concentric rings inward.
+export function rectOutlineTiles(x0, y0, x1, y1, thickness = 1) {
+	const tiles: [number, number][] = [];
+	const seen = new Set<string>();
 	const minX = Math.min(x0, x1),
 		maxX = Math.max(x0, x1);
 	const minY = Math.min(y0, y1),
 		maxY = Math.max(y0, y1);
-	for (let x = minX; x <= maxX; x++) {
-		tiles.push([x, minY]);
-		if (minY !== maxY) tiles.push([x, maxY]);
+	for (let t = 0; t < thickness; t++) {
+		const lx = minX + t,
+			rx = maxX - t,
+			ty = minY + t,
+			by = maxY - t;
+		if (lx > rx || ty > by) break;
+		const push = (x: number, y: number) => {
+			const k = `${x}:${y}`;
+			if (!seen.has(k)) {
+				seen.add(k);
+				tiles.push([x, y]);
+			}
+		};
+		for (let x = lx; x <= rx; x++) {
+			push(x, ty);
+			if (ty !== by) push(x, by);
+		}
+		for (let y = ty + 1; y < by; y++) {
+			push(lx, y);
+			if (lx !== rx) push(rx, y);
+		}
 	}
-	for (let y = minY + 1; y < maxY; y++) {
-		tiles.push([minX, y]);
-		if (minX !== maxX) tiles.push([maxX, y]);
+	return tiles;
+}
+
+// Square brush footprint centred at (cx, cy). size=1 → just the tile.
+export function brushTiles(cx: number, cy: number, size: number): [number, number][] {
+	const r = Math.max(0, size - 1);
+	const tiles: [number, number][] = [];
+	for (let dx = -r; dx <= r; dx++) {
+		for (let dy = -r; dy <= r; dy++) {
+			tiles.push([cx + dx, cy + dy]);
+		}
 	}
 	return tiles;
 }

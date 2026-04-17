@@ -21,7 +21,7 @@ import { toolStore } from "@/stores/tools.svelte";
 import { markerStore } from "@/stores/markers.svelte";
 import { mapStore } from "@/stores/map.svelte";
 import { layerStore } from "@/stores/layers.svelte";
-import { argbToCss, bresenhamLine, floodFill, rectOutlineTiles, toGlobalCoords } from "@/helpers";
+import { argbToCss, bresenhamLine, brushTiles, floodFill, rectOutlineTiles, toGlobalCoords } from "@/helpers";
 
 // Rectangle cache: key → L.Rectangle
 const rectangles: Record<string, L.Rectangle> = {};
@@ -161,7 +161,7 @@ export function initMap(container: HTMLElement) {
 			drawing = true;
 			map.dragging.disable();
 			markerStore.beginAction();
-			markerStore.place(map.getPlane(), tile.x, tile.y, toolStore.argbColor);
+			paintAt(map.getPlane(), tile.x, tile.y);
 		} else if (tool === "rect") {
 			drawing = true;
 			rectStart = tile;
@@ -175,18 +175,21 @@ export function initMap(container: HTMLElement) {
 	});
 
 	function eraseAt(plane: number, cx: number, cy: number) {
-		const r = toolStore.eraserSize - 1;
-		for (let dx = -r; dx <= r; dx++) {
-			for (let dy = -r; dy <= r; dy++) {
-				markerStore.remove(plane, cx + dx, cy + dy);
-			}
+		for (const [x, y] of brushTiles(cx, cy, toolStore.eraserSize)) {
+			markerStore.remove(plane, x, y);
+		}
+	}
+
+	function paintAt(plane: number, cx: number, cy: number) {
+		for (const [x, y] of brushTiles(cx, cy, toolStore.brushSize)) {
+			markerStore.place(plane, x, y, toolStore.argbColor);
 		}
 	}
 
 	map.on("mousemove", (e: any) => {
 		const tile = tileAt(e);
 		if (toolStore.activeTool === "freehand" && drawing) {
-			markerStore.place(map.getPlane(), tile.x, tile.y, toolStore.argbColor);
+			paintAt(map.getPlane(), tile.x, tile.y);
 		} else if (toolStore.activeTool === "eraser" && drawing) {
 			eraseAt(map.getPlane(), tile.x, tile.y);
 		} else if (toolStore.activeTool === "rect" && drawing && rectStart) {
@@ -213,7 +216,7 @@ export function initMap(container: HTMLElement) {
 		if (toolStore.activeTool === "rect" && drawing && rectStart) {
 			markerStore.beginAction();
 			const plane = map.getPlane();
-			for (const [x, y] of rectOutlineTiles(rectStart.x, rectStart.y, tile.x, tile.y)) {
+			for (const [x, y] of rectOutlineTiles(rectStart.x, rectStart.y, tile.x, tile.y, toolStore.brushSize)) {
 				markerStore.place(plane, x, y, toolStore.argbColor);
 			}
 			markerStore.commitAction();
@@ -242,8 +245,8 @@ export function initMap(container: HTMLElement) {
 			} else {
 				markerStore.beginAction();
 				const plane = map.getPlane();
-				for (const [x, y] of bresenhamLine(lineStart.x, lineStart.y, tile.x, tile.y)) {
-					markerStore.place(plane, x, y, toolStore.argbColor);
+				for (const [cx, cy] of bresenhamLine(lineStart.x, lineStart.y, tile.x, tile.y)) {
+					paintAt(plane, cx, cy);
 				}
 				markerStore.commitAction();
 				lineStart = null;

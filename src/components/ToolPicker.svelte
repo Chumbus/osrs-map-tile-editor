@@ -31,6 +31,19 @@
 			/>
 			<span class="size-val">{toolStore.eraserSize}</span>
 		</div>
+	{:else if toolStore.activeTool === "freehand" || toolStore.activeTool === "line" || toolStore.activeTool === "rect"}
+		<div class="size-row">
+			<label for="brush-size" class="size-label">Size</label>
+			<input
+				id="brush-size"
+				type="range"
+				min="1"
+				max="10"
+				bind:value={toolStore.brushSize}
+				class="size-slider"
+			/>
+			<span class="size-val">{toolStore.brushSize}</span>
+		</div>
 	{/if}
 
 	<p class="hint">{toolStore.hint}</p>

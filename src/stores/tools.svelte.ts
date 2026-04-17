@@ -15,6 +15,7 @@ class ToolStore {
 	color: string = $state("#FFFF00");
 	opacity: number = $state(100);
 	eraserSize: number = $state(1);
+	brushSize: number = $state(1);
 
 	get cssColor() {
 		return this.color;
